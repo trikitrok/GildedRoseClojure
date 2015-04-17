@@ -30,11 +30,9 @@
 (defn- between-days-to-selling-date? [lower higher {sell-in :sell-in}]
   (and (>= sell-in lower) (< sell-in higher)))
 
-(defn- update-item-quality [{:keys [sell-in name quality] :as item}] 
+(defn- update-item-quality [item]
   (cond
-    
-    (aged-brie? item)
-    (increase-quality item 1)    
+    (aged-brie? item) (increase-quality item 1)    
     
     (backstage-passes? item)
     (cond 
