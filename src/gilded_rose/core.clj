@@ -10,38 +10,40 @@
 (defn- backstage-passes? [{:keys [name]}]
   (= name "Backstage passes to a TAFKAL80ETC concert"))
 
+(defn- update-item-quality [{:keys [sell-in name quality] :as item}] 
+  (cond
+    
+    (aged-brie? item)
+    (if (< quality 50)
+      (merge item {:quality (inc quality)})
+      item)
+    
+    (backstage-passes? item)
+    (cond 
+      (and (>= sell-in 5) (< sell-in 10))
+      (merge item {:quality (min 50 (inc (inc quality)))})
+      
+      (and (>= sell-in 0) (< sell-in 5))
+      (merge item {:quality (min 50 (inc (inc (inc quality))))})
+      
+      (and (>= sell-in 0) (< quality 50))
+      (merge item {:quality (inc quality)})
+      
+      (< sell-in 0)
+      (merge item {:quality 0})
+      
+      :else item)
+    
+    (regular? item)
+    (if (< sell-in 0)  
+      (merge item {:quality (max 0 (- quality 2))})
+      (merge item {:quality (max 0 (dec quality))}))
+    
+    :else item))
+
 (defn update-quality [items]
   (map
-    (fn [{:keys [sell-in name quality] :as item}] 
-      (cond
-        
-        (aged-brie? item)
-        (if (< quality 50)
-          (merge item {:quality (inc quality)})
-          item)
-        
-        (backstage-passes? item)
-        (cond 
-          (and (>= sell-in 5) (< sell-in 10))
-          (merge item {:quality (min 50 (inc (inc quality)))})
-          
-          (and (>= sell-in 0) (< sell-in 5))
-          (merge item {:quality (min 50 (inc (inc (inc quality))))})
-          
-          (and (>= sell-in 0) (< quality 50))
-          (merge item {:quality (inc quality)})
-          
-          (< sell-in 0)
-          (merge item {:quality 0})
-          
-          :else item)
-        
-        (regular? item)
-        (if (< sell-in 0)  
-          (merge item {:quality (max 0 (- quality 2))})
-          (merge item {:quality (max 0 (dec quality))}))
-        
-        :else item))
+    update-item-quality
     (map (fn [item]
            (if (not= "Sulfuras, Hand of Ragnaros" (:name item))
              (merge item {:sell-in (dec (:sell-in item))})
