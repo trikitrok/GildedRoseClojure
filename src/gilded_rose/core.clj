@@ -11,9 +11,6 @@
   (map
     (fn [{:keys [sell-in name quality] :as item}] 
       (cond
-        (and (< sell-in 0) 
-             (= "Backstage passes to a TAFKAL80ETC concert" name))
-        (merge item {:quality 0})
         
         (aged-brie? item)
         (if (< quality 50)
@@ -23,16 +20,19 @@
         (= name "Backstage passes to a TAFKAL80ETC concert")
         (cond 
           (and (>= sell-in 5) (< sell-in 10))
-              (merge item {:quality (min 50 (inc (inc quality)))})
+          (merge item {:quality (min 50 (inc (inc quality)))})
           
           (and (>= sell-in 0) (< sell-in 5))
-            (merge item {:quality (min 50 (inc (inc (inc quality))))})
-            
-          (< quality 50)
-              (merge item {:quality (inc quality)})
+          (merge item {:quality (min 50 (inc (inc (inc quality))))})
+          
+          (and (>= sell-in 0) (< quality 50))
+          (merge item {:quality (inc quality)})
+          
+          (< sell-in 0)
+          (merge item {:quality 0})
           
           :else item)
-                
+        
         (regular? item)
         (if (< sell-in 0)  
           (merge item {:quality (max 0 (- quality 2))})
