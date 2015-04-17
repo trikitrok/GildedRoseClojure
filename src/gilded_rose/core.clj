@@ -24,6 +24,9 @@
 (defn- after-selling-date? [{sell-in :sell-in}]
   (< sell-in 0))
 
+(defn- ten-or-more-days-to-selling-date? [{sell-in :sell-in}]
+  (>= sell-in 10))
+
 (defn- update-item-quality [{:keys [sell-in name quality] :as item}] 
   (cond
     
@@ -32,7 +35,7 @@
     
     (backstage-passes? item)
     (cond 
-      (>= sell-in 10) (increase-quality item 1)
+      (ten-or-more-days-to-selling-date? item) (increase-quality item 1)
       
       (and (>= sell-in 5) (< sell-in 10)) (increase-quality item 2)
       
