@@ -21,17 +21,16 @@
             (if (< quality 50)
               (merge item {:quality (inc quality)})
               item)))
-        (< sell-in 0)
-        (if (= "Backstage passes to a TAFKAL80ETC concert" name)
-          (merge item {:quality 0})
-          (if (or (= "+5 Dexterity Vest" name) 
-                  (= "Elixir of the Mongoose" name))
-            (merge item {:quality (max 0 (- quality 2))})
-            item))
         
+        (and (= "Backstage passes to a TAFKAL80ETC concert" name) 
+             (< sell-in 0))
+          (merge item {:quality 0})
+                
         (or (= "+5 Dexterity Vest" name) 
             (= "Elixir of the Mongoose" name))
-        (merge item {:quality (max 0 (dec quality))})
+        (if (< sell-in 0)  
+          (merge item {:quality (max 0 (- quality 2))})
+          (merge item {:quality (max 0 (dec quality))}))
         
         :else item))
     (map (fn [item]
