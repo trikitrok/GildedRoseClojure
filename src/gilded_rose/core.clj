@@ -1,13 +1,13 @@
 (ns gilded-rose.core)
 
-(defn- regular? [{:keys [name]}]
+(defn- regular? [{name :name}]
   (or (= "+5 Dexterity Vest" name) 
       (= "Elixir of the Mongoose" name)))
 
-(defn- aged-brie? [{:keys [name]}]
+(defn- aged-brie? [{name :name}]
   (= name "Aged Brie"))
 
-(defn- backstage-passes? [{:keys [name]}]
+(defn- backstage-passes? [{name :name}]
   (= name "Backstage passes to a TAFKAL80ETC concert"))
 
 (defn- increase-quality [{:keys [quality] :as item} times]
