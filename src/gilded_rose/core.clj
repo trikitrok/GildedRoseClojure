@@ -12,8 +12,12 @@
              (= "Backstage passes to a TAFKAL80ETC concert" name))
         (merge item {:quality 0})
         
-        (or (= name "Aged Brie") 
-            (= name "Backstage passes to a TAFKAL80ETC concert"))
+        (= name "Aged Brie") 
+        (if (< quality 50)
+          (merge item {:quality (inc quality)})
+          item)
+        
+        (= name "Backstage passes to a TAFKAL80ETC concert")
         (if (and (= name "Backstage passes to a TAFKAL80ETC concert") 
                  (>= sell-in 5) 
                  (< sell-in 10))
