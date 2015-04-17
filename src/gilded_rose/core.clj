@@ -53,11 +53,14 @@
     
     :else item))
 
+(defn- degradable-item? [{name :name}]
+  (not= "Sulfuras, Hand of Ragnaros" name))
+
 (defn update-quality [items]
   (map
     update-item-quality
     (map (fn [item]
-           (if (not= "Sulfuras, Hand of Ragnaros" (:name item))
+           (if (degradable-item? item)
              (merge item {:sell-in (dec (:sell-in item))})
              item))
          items)))
