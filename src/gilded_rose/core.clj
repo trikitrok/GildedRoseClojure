@@ -27,6 +27,9 @@
 (defn- ten-or-more-days-to-selling-date? [{sell-in :sell-in}]
   (>= sell-in 10))
 
+(defn- between-days-to-selling-date? [lower higher {sell-in :sell-in}]
+  (and (>= sell-in lower) (< sell-in higher)))
+
 (defn- update-item-quality [{:keys [sell-in name quality] :as item}] 
   (cond
     
@@ -37,16 +40,16 @@
     (cond 
       (ten-or-more-days-to-selling-date? item) (increase-quality item 1)
       
-      (and (>= sell-in 5) (< sell-in 10)) (increase-quality item 2)
+      (between-days-to-selling-date? 5 10 item) (increase-quality item 2)
       
-      (and (>= sell-in 0) (< sell-in 5)) (increase-quality item 3)
+      (between-days-to-selling-date? 0 5 item) (increase-quality item 3)
       
       (after-selling-date? item) (set-quality-to-zero item)
       
       :else item)
     
     (regular? item)
-    (if (< sell-in 0)  
+    (if (after-selling-date? item)  
       (decrease-quality item 2)
       (decrease-quality item 1))
     
