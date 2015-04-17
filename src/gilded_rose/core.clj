@@ -29,17 +29,13 @@
     
     (backstage-passes? item)
     (cond 
-      (and (>= sell-in 5) (< sell-in 10))
-      (increase-quality item 2)
+      (and (>= sell-in 5) (< sell-in 10)) (increase-quality item 2)
       
-      (and (>= sell-in 0) (< sell-in 5))
-      (increase-quality item 3)
+      (and (>= sell-in 0) (< sell-in 5)) (increase-quality item 3)
       
-      (and (>= sell-in 0) (< quality 50))
-      (increase-quality item 1)
+      (and (>= sell-in 0) (< quality 50)) (increase-quality item 1)
       
-      (< sell-in 0)
-      (set-quality-to-zero item)
+      (< sell-in 0) (set-quality-to-zero item)
       
       :else item)
     
