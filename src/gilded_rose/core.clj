@@ -30,11 +30,7 @@
             (if (< quality 50)
               (merge item {:quality (inc quality)})
               item)))
-        
-        (and (= "Backstage passes to a TAFKAL80ETC concert" name) 
-             (< sell-in 0))
-        (merge item {:quality 0})
-        
+                
         (regular? item)
         (if (< sell-in 0)  
           (merge item {:quality (max 0 (- quality 2))})
