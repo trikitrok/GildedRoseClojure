@@ -14,6 +14,10 @@
   (merge item
          {:quality (min 50 (reduce + quality (repeat times 1)))}))
 
+(defn- decrease-quality [{:keys [quality] :as item} times]
+  (merge item 
+         {:quality (max 0 (reduce - quality (repeat times 1)))}))
+
 (defn- update-item-quality [{:keys [sell-in name quality] :as item}] 
   (cond
     
@@ -40,8 +44,8 @@
     
     (regular? item)
     (if (< sell-in 0)  
-      (merge item {:quality (max 0 (- quality 2))})
-      (merge item {:quality (max 0 (dec quality))}))
+      (decrease-quality item 2)
+      (decrease-quality item 1))
     
     :else item))
 
