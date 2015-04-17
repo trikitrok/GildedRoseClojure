@@ -25,9 +25,7 @@
   (cond
     
     (aged-brie? item)
-    (if (< quality 50)
-      (increase-quality item 1)
-      item)
+    (increase-quality item 1)    
     
     (backstage-passes? item)
     (cond 
