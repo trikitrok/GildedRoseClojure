@@ -18,6 +18,9 @@
   (merge item 
          {:quality (max 0 (reduce - quality (repeat times 1)))}))
 
+(defn- set-quality-to-zero [{:keys [quality] :as item}]
+  (merge item {:quality 0}))
+
 (defn- update-item-quality [{:keys [sell-in name quality] :as item}] 
   (cond
     
@@ -38,7 +41,7 @@
       (increase-quality item 1)
       
       (< sell-in 0)
-      (merge item {:quality 0})
+      (set-quality-to-zero item)
       
       :else item)
     
