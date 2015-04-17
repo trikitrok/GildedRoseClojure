@@ -7,6 +7,9 @@
 (defn- aged-brie? [{:keys [name]}]
   (= name "Aged Brie"))
 
+(defn- backstage-passes? [{:keys [name]}]
+  (= name "Backstage passes to a TAFKAL80ETC concert"))
+
 (defn update-quality [items]
   (map
     (fn [{:keys [sell-in name quality] :as item}] 
@@ -17,7 +20,7 @@
           (merge item {:quality (inc quality)})
           item)
         
-        (= name "Backstage passes to a TAFKAL80ETC concert")
+        (backstage-passes? item)
         (cond 
           (and (>= sell-in 5) (< sell-in 10))
           (merge item {:quality (min 50 (inc (inc quality)))})
