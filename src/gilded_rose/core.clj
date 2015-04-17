@@ -4,6 +4,9 @@
   (or (= "+5 Dexterity Vest" name) 
       (= "Elixir of the Mongoose" name)))
 
+(defn- aged-brie? [{:keys [name]}]
+  (= name "Aged Brie"))
+
 (defn update-quality [items]
   (map
     (fn [{:keys [sell-in name quality] :as item}] 
@@ -12,7 +15,7 @@
              (= "Backstage passes to a TAFKAL80ETC concert" name))
         (merge item {:quality 0})
         
-        (= name "Aged Brie") 
+        (aged-brie? item)
         (if (< quality 50)
           (merge item {:quality (inc quality)})
           item)
