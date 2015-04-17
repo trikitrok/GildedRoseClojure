@@ -56,12 +56,15 @@
 (defn- degradable-item? [{name :name}]
   (not= "Sulfuras, Hand of Ragnaros" name))
 
+(defn- age-one-day [{sell-in :sell-in :as item}]
+  (merge item {:sell-in (dec sell-in)}))
+
 (defn update-quality [items]
   (map
     update-item-quality
     (map (fn [item]
            (if (degradable-item? item)
-             (merge item {:sell-in (dec (:sell-in item))})
+             (age-one-day item) 
              item))
          items)))
 
