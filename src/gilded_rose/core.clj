@@ -1,5 +1,9 @@
 (ns gilded-rose.core)
 
+(defn- regular? [{:keys [name]}]
+  (or (= "+5 Dexterity Vest" name) 
+      (= "Elixir of the Mongoose" name)))
+
 (defn update-quality [items]
   (map
     (fn [{:keys [sell-in name quality] :as item}] 
@@ -24,10 +28,9 @@
         
         (and (= "Backstage passes to a TAFKAL80ETC concert" name) 
              (< sell-in 0))
-          (merge item {:quality 0})
-                
-        (or (= "+5 Dexterity Vest" name) 
-            (= "Elixir of the Mongoose" name))
+        (merge item {:quality 0})
+        
+        (regular? item)
         (if (< sell-in 0)  
           (merge item {:quality (max 0 (- quality 2))})
           (merge item {:quality (max 0 (dec quality))}))
