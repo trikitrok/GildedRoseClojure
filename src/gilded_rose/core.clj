@@ -21,6 +21,9 @@
 (defn- set-quality-to-zero [{:keys [quality] :as item}]
   (merge item {:quality 0}))
 
+(defn- after-selling-date? [{sell-in :sell-in}]
+  (< sell-in 0))
+
 (defn- update-item-quality [{:keys [sell-in name quality] :as item}] 
   (cond
     
@@ -35,7 +38,7 @@
       
       (>= sell-in 0) (increase-quality item 1)
       
-      (< sell-in 0) (set-quality-to-zero item)
+      (after-selling-date? item) (set-quality-to-zero item)
       
       :else item)
     
