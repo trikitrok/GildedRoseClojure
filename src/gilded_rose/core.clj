@@ -21,15 +21,17 @@
           item)
         
         (= name "Backstage passes to a TAFKAL80ETC concert")
-        (if (and (>= sell-in 5) 
-                 (< sell-in 10))
-          (merge item {:quality (min 50 (inc (inc quality)))})
-          (if (and (>= sell-in 0) 
-                   (< sell-in 5))
+        (cond 
+          (and (>= sell-in 5) (< sell-in 10))
+              (merge item {:quality (min 50 (inc (inc quality)))})
+          
+          (and (>= sell-in 0) (< sell-in 5))
             (merge item {:quality (min 50 (inc (inc (inc quality))))})
-            (if (< quality 50)
+            
+          (< quality 50)
               (merge item {:quality (inc quality)})
-              item)))
+          
+          :else item)
                 
         (regular? item)
         (if (< sell-in 0)  
