@@ -10,24 +10,28 @@
 (defn- backstage-passes? [{:keys [name]}]
   (= name "Backstage passes to a TAFKAL80ETC concert"))
 
+(defn- increase-quality [{:keys [quality] :as item} times]
+  (merge item
+         {:quality (min 50 (reduce + quality (repeat times 1)))}))
+
 (defn- update-item-quality [{:keys [sell-in name quality] :as item}] 
   (cond
     
     (aged-brie? item)
     (if (< quality 50)
-      (merge item {:quality (inc quality)})
+      (increase-quality item 1)
       item)
     
     (backstage-passes? item)
     (cond 
       (and (>= sell-in 5) (< sell-in 10))
-      (merge item {:quality (min 50 (inc (inc quality)))})
+      (increase-quality item 2)
       
       (and (>= sell-in 0) (< sell-in 5))
-      (merge item {:quality (min 50 (inc (inc (inc quality))))})
+      (increase-quality item 3)
       
       (and (>= sell-in 0) (< quality 50))
-      (merge item {:quality (inc quality)})
+      (increase-quality item 1)
       
       (< sell-in 0)
       (merge item {:quality 0})
