@@ -32,11 +32,11 @@
     
     (backstage-passes? item)
     (cond 
+      (>= sell-in 10) (increase-quality item 1)
+      
       (and (>= sell-in 5) (< sell-in 10)) (increase-quality item 2)
       
       (and (>= sell-in 0) (< sell-in 5)) (increase-quality item 3)
-      
-      (>= sell-in 0) (increase-quality item 1)
       
       (after-selling-date? item) (set-quality-to-zero item)
       
