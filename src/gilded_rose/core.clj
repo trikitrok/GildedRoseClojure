@@ -59,14 +59,12 @@
 (defn- age-one-day [{sell-in :sell-in :as item}]
   (merge item {:sell-in (dec sell-in)}))
 
+(def ^:private all-age-one-day
+  (partial map #(if (degradable-item? %) (age-one-day %) %)))
+
 (defn update-quality [items]
-  (map
-    update-item-quality
-    (map (fn [item]
-           (if (degradable-item? item)
-             (age-one-day item) 
-             item))
-         items)))
+  (map update-item-quality 
+       (all-age-one-day items)))
 
 (defn item [item-name, sell-in, quality]
   {:name item-name, :sell-in sell-in, :quality quality})
