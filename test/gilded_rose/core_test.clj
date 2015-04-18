@@ -129,7 +129,7 @@
       => [(item "Conjured Elixir of the Mongoose" 1 0)])
     
     (fact 
-      "Conjured Sulfuras is still inmutable"
+      "Conjured Sulfuras is still immutable"
       (pass-days 
         1
         [(item "Conjured Sulfuras, Hand of Ragnaros" 0 80)]) 
