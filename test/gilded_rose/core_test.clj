@@ -93,7 +93,7 @@
         [(item "Backstage passes to a TAFKAL80ETC concert" 5 20)]) 
       => [(item "Backstage passes to a TAFKAL80ETC concert" -1 0)])
     
-     (fact 
+    (fact 
       "Quality can't be grater than 50"
       (pass-days 
         2
@@ -112,4 +112,18 @@
       (pass-days 
         2
         [(item "Conjured Elixir of the Mongoose" 17 20)]) 
-      => [(item "Conjured Elixir of the Mongoose" 15 16)])))
+      => [(item "Conjured Elixir of the Mongoose" 15 16)])
+    
+    (fact 
+      "Quality decreases by four each day after sell date"
+      (pass-days 
+        2
+        [(item "Conjured Elixir of the Mongoose" 0 20)]) 
+      => [(item "Conjured Elixir of the Mongoose" -2 12)])
+    
+    (fact 
+      "Quality can't be less than zero"
+      (pass-days 
+        1
+        [(item "Conjured Elixir of the Mongoose" 2 1)]) 
+      => [(item "Conjured Elixir of the Mongoose" 1 0)])))
