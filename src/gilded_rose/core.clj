@@ -24,6 +24,11 @@
   (cond    
     :else item))
 
+(defn- update-regular-item-quality [item]
+  (if (after-selling-date? item)  
+    (decrease-quality item 2)
+    (decrease-quality item 1)))
+
 (defmulti update-item-quality :name)
 
 (defmethod update-item-quality :default [item]
@@ -45,14 +50,10 @@
     :else item))
 
 (defmethod update-item-quality "+5 Dexterity Vest" [item]
-  (if (after-selling-date? item)  
-    (decrease-quality item 2)
-    (decrease-quality item 1)))
+  (update-regular-item-quality item))
 
 (defmethod update-item-quality "Elixir of the Mongoose" [item]
-  (if (after-selling-date? item)  
-    (decrease-quality item 2)
-    (decrease-quality item 1)))
+  (update-regular-item-quality item))
 
 (defn- degradable-item? [{name :name}]
   (not= "Sulfuras, Hand of Ragnaros" name))
