@@ -30,7 +30,7 @@
 (defn- between-days-to-selling-date? [lower higher {sell-in :sell-in}]
   (and (>= sell-in lower) (< sell-in higher)))
 
-(defn- update-item-quality [item]
+(defn- update-item-quality-old [item]
   (cond
     (aged-brie? item) (increase-quality item 1)    
     
@@ -53,6 +53,11 @@
     
     :else item))
 
+(defmulti update-item-quality :name)
+
+(defmethod update-item-quality :default [item]
+  (update-item-quality-old item))
+
 (defn- degradable-item? [{name :name}]
   (not= "Sulfuras, Hand of Ragnaros" name))
 
@@ -71,11 +76,9 @@
 
 (defn update-current-inventory[]
   (let [inventory 
-        [
-         (item "+5 Dexterity Vest" 10 20)
+        [(item "+5 Dexterity Vest" 10 20)
          (item "Aged Brie" 2 0)
          (item "Elixir of the Mongoose" 5 7)
          (item "Sulfuras, Hand of Ragnaros" 0 80)
-         (item "Backstage passes to a TAFKAL80ETC concert" 15 20)
-         ]]
+         (item "Backstage passes to a TAFKAL80ETC concert" 15 20)]]
     (update-quality inventory)))
