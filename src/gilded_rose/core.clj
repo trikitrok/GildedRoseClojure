@@ -4,9 +4,6 @@
   (or (= "+5 Dexterity Vest" name) 
       (= "Elixir of the Mongoose" name)))
 
-(defn- aged-brie? [{name :name}]
-  (= name "Aged Brie"))
-
 (defn- backstage-passes? [{name :name}]
   (= name "Backstage passes to a TAFKAL80ETC concert"))
 
@@ -31,9 +28,7 @@
   (and (>= sell-in lower) (< sell-in higher)))
 
 (defn- update-item-quality-old [item]
-  (cond
-    (aged-brie? item) (increase-quality item 1)    
-    
+  (cond    
     (backstage-passes? item)
     (cond 
       (ten-or-more-days-to-selling-date? item) (increase-quality item 1)
@@ -57,6 +52,9 @@
 
 (defmethod update-item-quality :default [item]
   (update-item-quality-old item))
+
+(defmethod update-item-quality "Aged Brie" [item]
+  (increase-quality item 1))
 
 (defn- degradable-item? [{name :name}]
   (not= "Sulfuras, Hand of Ragnaros" name))
