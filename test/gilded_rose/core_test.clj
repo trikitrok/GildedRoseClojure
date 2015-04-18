@@ -133,4 +133,39 @@
       (pass-days 
         1
         [(item "Conjured Sulfuras, Hand of Ragnaros" 0 80)]) 
-      => [(item "Conjured Sulfuras, Hand of Ragnaros" 0 80)])))
+      => [(item "Conjured Sulfuras, Hand of Ragnaros" 0 80)])
+    
+    (fact 
+      "Conjured Aged Brie quality increases by two eachs day before sell date"
+      (pass-days 
+        2
+        [(item "Conjured Aged Brie" 2, 0)]) 
+      => [(item "Conjured Aged Brie" 0 4)])
+    
+    (fact 
+      "Conjured Aged Brie quality also increases by two eachs day after sell date"
+      (pass-days 
+        2
+        [(item "Conjured Aged Brie" 0, 0)]) 
+      => [(item "Conjured Aged Brie" -2 4)])
+        
+    (fact 
+      "Quality can't be greater than 50"
+      (pass-days 
+        100
+        [(item "Conjured Aged Brie" 100, 0)]) 
+      => [(item "Conjured Aged Brie" 0 50)])
+    
+    (fact 
+      "Conjured Backstage Passes quality increases twice faster before sell date"
+      (pass-days 
+        15
+        [(item "Conjured Backstage passes to a TAFKAL80ETC concert" 15, 0)]) 
+      => [(item "Conjured Backstage passes to a TAFKAL80ETC concert" 0 50)])
+    
+    (fact 
+      "Conjured Backstage Passes quality is zero after sell date"
+      (pass-days 
+        16
+        [(item "Conjured Backstage passes to a TAFKAL80ETC concert" 15, 0)]) 
+      => [(item "Conjured Backstage passes to a TAFKAL80ETC concert" -1 0)])))
