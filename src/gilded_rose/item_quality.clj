@@ -1,15 +1,16 @@
 (ns gilded-rose.item-quality)
 
+(defn- update-quality [item value]
+  (merge item {:quality value}))
+
 (defn- increase-quality [{:keys [quality] :as item} times]
-  (merge item
-         {:quality (min 50 (reduce + quality (repeat times 1)))}))
+  (update-quality item (min 50 (reduce + quality (repeat times 1)))))
 
 (defn- decrease-quality [{:keys [quality] :as item} times]
-  (merge item 
-         {:quality (max 0 (reduce - quality (repeat times 1)))}))
+  (update-quality item (max 0 (reduce - quality (repeat times 1)))))
 
 (defn- set-quality-to-zero [{:keys [quality] :as item}]
-  (merge item {:quality 0}))
+  (update-quality item 0))
 
 (defn- after-selling-date? [{sell-in :sell-in}]
   (< sell-in 0))
