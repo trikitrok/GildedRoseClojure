@@ -2,7 +2,7 @@
   (:require [gilded-rose.item-quality :refer [update]]))
 
 (defn- degradable-item? [{name :name}]
-  (not= "Sulfuras, Hand of Ragnaros" name))
+  (not (.contains name "Sulfuras, Hand of Ragnaros")))
 
 (defn- age-one-day [{sell-in :sell-in :as item}]
   (merge item {:sell-in (dec sell-in)}))

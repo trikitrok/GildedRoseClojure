@@ -126,4 +126,11 @@
       (pass-days 
         1
         [(item "Conjured Elixir of the Mongoose" 2 1)]) 
-      => [(item "Conjured Elixir of the Mongoose" 1 0)])))
+      => [(item "Conjured Elixir of the Mongoose" 1 0)])
+    
+    (fact 
+      "Conjured Sulfuras is still inmutable"
+      (pass-days 
+        1
+        [(item "Conjured Sulfuras, Hand of Ragnaros" 0 80)]) 
+      => [(item "Conjured Sulfuras, Hand of Ragnaros" 0 80)])))
