@@ -4,9 +4,6 @@
   (or (= "+5 Dexterity Vest" name) 
       (= "Elixir of the Mongoose" name)))
 
-(defn- backstage-passes? [{name :name}]
-  (= name "Backstage passes to a TAFKAL80ETC concert"))
-
 (defn- increase-quality [{:keys [quality] :as item} times]
   (merge item
          {:quality (min 50 (reduce + quality (repeat times 1)))}))
@@ -29,18 +26,6 @@
 
 (defn- update-item-quality-old [item]
   (cond    
-    (backstage-passes? item)
-    (cond 
-      (ten-or-more-days-to-selling-date? item) (increase-quality item 1)
-      
-      (between-days-to-selling-date? 5 10 item) (increase-quality item 2)
-      
-      (between-days-to-selling-date? 0 5 item) (increase-quality item 3)
-      
-      (after-selling-date? item) (set-quality-to-zero item)
-      
-      :else item)
-    
     (regular? item)
     (if (after-selling-date? item)  
       (decrease-quality item 2)
@@ -55,6 +40,18 @@
 
 (defmethod update-item-quality "Aged Brie" [item]
   (increase-quality item 1))
+
+(defmethod update-item-quality "Backstage passes to a TAFKAL80ETC concert" [item]
+  (cond 
+    (ten-or-more-days-to-selling-date? item) (increase-quality item 1)
+    
+    (between-days-to-selling-date? 5 10 item) (increase-quality item 2)
+    
+    (between-days-to-selling-date? 0 5 item) (increase-quality item 3)
+    
+    (after-selling-date? item) (set-quality-to-zero item)
+    
+    :else item))
 
 (defn- degradable-item? [{name :name}]
   (not= "Sulfuras, Hand of Ragnaros" name))
