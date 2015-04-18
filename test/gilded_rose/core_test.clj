@@ -103,4 +103,13 @@
       (pass-days 
         17
         [(item "Backstage passes to a TAFKAL80ETC concert" 17 20)]) 
-      => [(item "Backstage passes to a TAFKAL80ETC concert" 0 50)])))
+      => [(item "Backstage passes to a TAFKAL80ETC concert" 0 50)]))
+  
+  (facts
+    "Conjured items"
+    (fact 
+      "Quality decreases by two each day before sell date"
+      (pass-days 
+        2
+        [(item "Conjured Elixir of the Mongoose" 17 20)]) 
+      => [(item "Conjured Elixir of the Mongoose" 15 16)])))

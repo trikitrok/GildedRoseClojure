@@ -26,7 +26,18 @@
     (decrease-quality item 2)
     (decrease-quality item 1)))
 
-(defmulti update :name)
+(defmulti update 
+  (fn [{name :name}]
+    (if (.contains name "Conjured")
+      "Conjured"
+      name)))
+
+(defmethod update "Conjured" [{name :name :as item}]
+  (let 
+    [not-conjured-item-name (clojure.string/replace name #"Conjured " "")
+     not-conjured-item (merge item {:name not-conjured-item-name})]
+    (merge (update (update not-conjured-item))
+           {:name name})))
 
 (defmethod update :default [item]
   item)
