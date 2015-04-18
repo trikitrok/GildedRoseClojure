@@ -1,9 +1,5 @@
 (ns gilded-rose.core)
 
-(defn- regular? [{name :name}]
-  (or (= "+5 Dexterity Vest" name) 
-      (= "Elixir of the Mongoose" name)))
-
 (defn- increase-quality [{:keys [quality] :as item} times]
   (merge item
          {:quality (min 50 (reduce + quality (repeat times 1)))}))
@@ -26,11 +22,6 @@
 
 (defn- update-item-quality-old [item]
   (cond    
-    (regular? item)
-    (if (after-selling-date? item)  
-      (decrease-quality item 2)
-      (decrease-quality item 1))
-    
     :else item))
 
 (defmulti update-item-quality :name)
@@ -52,6 +43,16 @@
     (after-selling-date? item) (set-quality-to-zero item)
     
     :else item))
+
+(defmethod update-item-quality "+5 Dexterity Vest" [item]
+  (if (after-selling-date? item)  
+    (decrease-quality item 2)
+    (decrease-quality item 1)))
+
+(defmethod update-item-quality "Elixir of the Mongoose" [item]
+  (if (after-selling-date? item)  
+    (decrease-quality item 2)
+    (decrease-quality item 1)))
 
 (defn- degradable-item? [{name :name}]
   (not= "Sulfuras, Hand of Ragnaros" name))
