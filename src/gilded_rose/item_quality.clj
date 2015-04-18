@@ -1,7 +1,7 @@
 (ns gilded-rose.item-quality)
 
 (defn- update-quality [item value]
-  (merge item {:quality value}))
+  (assoc item :quality value))
 
 (defn- increase-quality [{:keys [quality] :as item} times]
   (update-quality item (min 50 (reduce + quality (repeat times 1)))))
@@ -35,9 +35,9 @@
 (defmethod update "Conjured" [{name :name :as item}]
   (let 
     [not-conjured-item-name (clojure.string/replace name #"Conjured " "")
-     not-conjured-item (merge item {:name not-conjured-item-name})]
-    (merge (update (update not-conjured-item))
-           {:name name})))
+     not-conjured-item (assoc item :name not-conjured-item-name)]
+    (assoc (update (update not-conjured-item))
+           :name name)))
 
 (defmethod update :default [item]
   item)

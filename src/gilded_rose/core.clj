@@ -5,7 +5,7 @@
   (not (.contains name "Sulfuras, Hand of Ragnaros")))
 
 (defn- age-one-day [{sell-in :sell-in :as item}]
-  (merge item {:sell-in (dec sell-in)}))
+  (assoc item :sell-in (dec sell-in)))
 
 (def ^:private all-age-one-day
   (partial map #(if (degradable-item? %) (age-one-day %) %)))
