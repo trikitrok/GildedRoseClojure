@@ -31,14 +31,22 @@
       :conjured
       (item-types-by-name name))))
 
+(defn- same-but-with-new-name [name item]
+  (assoc item :name name))
+
+(defn- corresponding-not-conjured-item [{conjured-name :name :as conjured-item}]
+  (let
+    [not-conjured-item-name (clojure.string/replace conjured-name #"Conjured " "")]
+    (same-but-with-new-name not-conjured-item-name conjured-item)))
+
 (defmulti update type-of-item)
 
-(defmethod update :conjured [{name :name :as item}]
-  (let
-    [not-conjured-item-name (clojure.string/replace name #"Conjured " "")
-     not-conjured-item      (assoc item :name not-conjured-item-name)]
-    (assoc (update (update not-conjured-item))
-      :name name)))
+(defmethod update :conjured [{conjured-name :name :as conjured-item}]
+  (->> conjured-item
+       corresponding-not-conjured-item
+       update
+       update
+       (same-but-with-new-name conjured-name)))
 
 (defmethod update :default [item]
   item)
