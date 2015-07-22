@@ -9,7 +9,7 @@
 (defn- decrease-quality [{:keys [quality] :as item} times]
   (update-quality item (max 0 (reduce - quality (repeat times 1)))))
 
-(defn- set-quality-to-zero [{:keys [quality] :as item}]
+(defn- set-quality-to-zero [item]
   (update-quality item 0))
 
 (defn- after-selling-date? [{sell-in :sell-in}]
@@ -21,44 +21,44 @@
 (defn- between-days-to-selling-date? [lower higher {sell-in :sell-in}]
   (and (>= sell-in lower) (< sell-in higher)))
 
-(defn- update-regular-item-quality [item]
-  (if (after-selling-date? item)  
-    (decrease-quality item 2)
-    (decrease-quality item 1)))
-
-(defmulti update 
-  (fn [{name :name}]
+(defn- type-of-item [{name :name}]
+  (let [item-types-by-name
+        {"Aged Brie" :aged-brie
+         "Backstage passes to a TAFKAL80ETC concert" :backstage-pass
+         "+5 Dexterity Vest" :regular-item
+         "Elixir of the Mongoose" :regular-item}]
     (if (.contains name "Conjured")
-      "Conjured"
-      name)))
+      :conjured
+      (item-types-by-name name))))
 
-(defmethod update "Conjured" [{name :name :as item}]
-  (let 
+(defmulti update type-of-item)
+
+(defmethod update :conjured [{name :name :as item}]
+  (let
     [not-conjured-item-name (clojure.string/replace name #"Conjured " "")
-     not-conjured-item (assoc item :name not-conjured-item-name)]
+     not-conjured-item      (assoc item :name not-conjured-item-name)]
     (assoc (update (update not-conjured-item))
-           :name name)))
+      :name name)))
 
 (defmethod update :default [item]
   item)
 
-(defmethod update "Aged Brie" [item]
+(defmethod update :aged-brie [item]
   (increase-quality item 1))
 
-(defmethod update "Backstage passes to a TAFKAL80ETC concert" [item]
-  (cond 
+(defmethod update :backstage-pass [item]
+  (cond
     (ten-or-more-days-to-selling-date? item) (increase-quality item 1)
-    
+
     (between-days-to-selling-date? 5 10 item) (increase-quality item 2)
-    
+
     (between-days-to-selling-date? 0 5 item) (increase-quality item 3)
-    
+
     (after-selling-date? item) (set-quality-to-zero item)
-    
+
     :else item))
 
-(defmethod update "+5 Dexterity Vest" [item]
-  (update-regular-item-quality item))
-
-(defmethod update "Elixir of the Mongoose" [item]
-  (update-regular-item-quality item))
+(defmethod update :regular-item [item]
+  (if (after-selling-date? item)
+    (decrease-quality item 2)
+    (decrease-quality item 1)))
